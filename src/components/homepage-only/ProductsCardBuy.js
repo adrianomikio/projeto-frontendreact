@@ -1,21 +1,27 @@
-import { ProductInfoSection, ProductImage, ProductDescription, Button } from "./styled-components"
+import { ProductInfoSection, ProductImage, ProductDescription, ProductBuyButton } from "../styled-components"
 
 export const ProductCardBuy = (props) => {
-    function onChangeInput(e) {
-        props.setAmountToBuy(e.target.value)
-    }
+    let {
+        id, imageUrl, name, description, price,
+        amountToBuy,
+        addToCart, onChangeInput
+    } = props
+    
     return (
-        <ProductInfoSection>
-            <ProductImage src={props.imageUrl} alt={props.name} />
+        <ProductInfoSection key={id}>
+            <ProductImage src={imageUrl} alt={name} />
             <ProductDescription>
-                <h3>{props.name}</h3>
-                <p>{props.description}</p>
-                <p>R$ {props.price}</p>
-                <input
-                type="number"
-                value={props.amountToBuy}
-                onChange={onChangeInput}/>
-                <Button onClick={props.addToCart}>Adicionar ao carrinho!</Button>
+                <h3>{name}</h3>
+                <p>{description}</p>
+                <p>R${price}</p>
+                <p>Quantidade:
+                    <input
+                        id={id}
+                        value={amountToBuy}
+                        onChange={onChangeInput} /></p>
+                <ProductBuyButton
+                    id={id}
+                    onClick={addToCart}>Adicionar</ProductBuyButton>
             </ProductDescription>
         </ProductInfoSection>
     )
