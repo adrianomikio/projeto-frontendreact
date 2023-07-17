@@ -1,27 +1,42 @@
 import {
-    ProductInfoSection,
-    ProductImage,
-    ProductDescription,
-    ProductBuyButton
+    ProductCartCardSection,
+    ProductInformationCart,
+    ProductImageCart,
+    ProductNameCart,
+    ProductPriceCart,
+    MinusProductButton,
+    ProductAmountCart,
+    PlusProductButton,
+    ProductAmountSectionCart,
+    TotalPrice
 } from "../styled-components"
 
 export const ProductCardCart = (props) => {
+
+    const { key, id,
+        imageUrl, name, price,
+        minusOneProduct, amountInCart, plusOneProduct,
+        totalPrice
+    } = props
+
     return (
-        <ProductInfoSection key={props.key} id={props.id}>
-            <ProductImage src={props.imageUrl} alt={props.name} />
-            <ProductDescription>
-                <h3>{props.name}</h3>
-                <p>{props.description}</p>
-                <p>R$ {props.price}</p>
-                <p>Quantidade:
-                    <input
-                        type="number"
-                        value={props.amountToBuy}
-                        onChange={() => props.setAmountToBuy} /></p>
-                <ProductBuyButton
-                    onClick={(e) => props.addToCart()}
-                    id={props.buttonId}>Adicionar</ProductBuyButton>
-            </ProductDescription>
-        </ProductInfoSection>
+        <ProductCartCardSection key={key}>
+            <ProductImageCart src={imageUrl} alt={name} />
+            <ProductInformationCart>
+                <ProductNameCart>{name}</ProductNameCart>
+                <ProductPriceCart>Preço: R$ {price}</ProductPriceCart>
+            </ProductInformationCart>
+            <ProductAmountSectionCart>
+                <MinusProductButton id={id} onClick={minusOneProduct}>
+                    -
+                </MinusProductButton>
+                <ProductAmountCart>Quantidade: {`${amountInCart}`}
+                </ProductAmountCart>
+                <PlusProductButton id={id} onClick={plusOneProduct}>
+                    +
+                </PlusProductButton>
+            </ProductAmountSectionCart>
+            <TotalPrice >Preço total do produto: R${totalPrice}</TotalPrice>
+        </ProductCartCardSection>
     )
 }

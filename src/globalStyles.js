@@ -5,7 +5,10 @@ export const GlobalStyle = createGlobalStyle`
 body {
     margin: 0px;
     background-image: url(${Background});
-    width: 1366px;
+    width: 1356px;
     font-family: Helvetica;
+    font-size: 16px;
     color: rgb(222, 222, 157);
+    display: flex;
+    flex-direction: column;
 }`
