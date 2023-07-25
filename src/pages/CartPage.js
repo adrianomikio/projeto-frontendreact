@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom"
 import {
     Header,
     Logo,
+    SearchSection, SearchBar, SearchButton,
     UserSection,
-    ThumbnailMessageBox, WelcomeMessage, CartThumbnail,
+    ThumbnailMessageBox, WelcomeMessage, CartThumbnail, AmountInCart,
     LoginForm, EmailInput, PasswordInput,
     ButtonsBox, LoginButton, SignupButton,
     Navbar, NavButton,
-    SearchSection, SearchBar, SearchButton,
     ProductsSectionCart,
     Footer, Socials, SocialMediaIcon, FooterButton, FooterText, MainNavigation, TotalCartPrice, TotalPriceAndBuyButtonSection, PurchaseButton
 } from "../components/styled-components"
@@ -26,6 +26,8 @@ export const CartPage = () => {
         loginUser,
         products,
         productsInUsersCart, setProductsInUsersCart,
+        productsAmountInUsersCart,
+        calculateProductsAmountInCart,
         welcomeMessage, setWelcomeMessage,
         goToHomePage, goToSignupPage, goToCartPage, goToAboutPage, goToAttributionsPage,
         LinkedInIcon, FacebookIcon, InstagramIcon, GitHubIcon
@@ -34,25 +36,14 @@ export const CartPage = () => {
     console.log(productsInUsersCart)
     const [cartTotalPrice, setCartTotalPrice] = useState(0)
 
-    function deleteProductFromCart(e) {
-        let productToDeleteIndex = Number
-        for (let i in productsInUsersCart) {
-            if (productsInUsersCart[i].id === Number(e.target.id)) {
-                productToDeleteIndex = i
-            }
-        }
-        let newProductsInUsersCart = productsInUsersCart
-        newProductsInUsersCart.splice(productToDeleteIndex, 0)
-        console.log(newProductsInUsersCart)
-        setProductsInUsersCart(newProductsInUsersCart)
-    }
-
     function minusOneProduct(e) {
         let newProductsInUsersCart = []
         for (let i in productsInUsersCart) {
             if (productsInUsersCart[i].id === Number(e.target.id)) {
                 if (productsInUsersCart[i].amountInCart === 1) {
-                    deleteProductFromCart(e)
+                    let newProductsInUsersCart = productsInUsersCart
+                    newProductsInUsersCart.splice(i, 0)
+                    console.log(newProductsInUsersCart)
                 }
                 else {
                     const newAmountInCart = productsInUsersCart[i].amountInCart -= 1
@@ -120,6 +111,7 @@ export const CartPage = () => {
         setCartTotalPrice(newCartTotalPrice)
     }
 
+    useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
     useEffect(() => { calculateCartTotalPrice(productsInUsersCart) }, [productsInUsersCart])
 
     return (
@@ -133,6 +125,7 @@ export const CartPage = () => {
                 <UserSection>
                     <ThumbnailMessageBox>
                         <CartThumbnail src={CartIcon} onClick={() => goToCartPage(navigate)} />
+                        <AmountInCart>{productsAmountInUsersCart}</AmountInCart>
                         <WelcomeMessage>{welcomeMessage}</WelcomeMessage>
                     </ThumbnailMessageBox>
                     <LoginForm name="login">
@@ -184,12 +177,6 @@ export const CartPage = () => {
                     <FooterText>Encontre-me em:</FooterText>
                     <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">
                         <SocialMediaIcon src={LinkedInIcon} alt="Ícone LinkedIn" />
-                    </a>
-                    <a href="https://www.facebook.com/profile.php?id=100013635730492" target="_blank">
-                        <SocialMediaIcon src={FacebookIcon} alt="Ícone Facebook" />
-                    </a>
-                    <a href="https://www.instagram.com/adrianomikio/" target="_blank">
-                        <SocialMediaIcon src={InstagramIcon} alt="Ícone Instagram" />
                     </a>
                     <a href="https://github.com/adrianouge/" target="_blank">
                         <SocialMediaIcon src={GitHubIcon} alt="Ícone GitHub" />

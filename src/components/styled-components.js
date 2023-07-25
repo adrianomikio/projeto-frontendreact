@@ -193,7 +193,7 @@ display: flex;
 flex-direction: row;
 align-self: flex-end;
 align-items: center;
-margin: 0 0 0 751px;
+margin: 0 0 0 838px;
 `
 
 export const SocialMediaIcon = styled.img`
@@ -366,13 +366,67 @@ margin: 0 0 0 110px;
 
 export const PurchaseButton = styled.button`
 align-self: center;
-height: 42px;
-width: 178px;
+height: 68px;
+width: 110px;
 border: 0px;
 border-radius: 10px;
 background: rgb(0, 97, 0);
 color: rgb(255, 255, 157);
 font-size: 16px;
 font-weight: bold;
-margin: 0 0 0 484px;
+margin: 0 0 0 751px;
+`
+export const AboutMain = styled.main`
+display: flex;
+justify-content: center;
+`
+
+export const AboutDescriptionSection = styled.section`
+display: flex;
+flex-direction: column;
+justify-content: center;
+width: 752px;
+padding: 26px 68px 26px 68px;
+background: rgb(0, 0, 37);
+margin: 26px 0 26px 0;
+border-radius: 26px;
+`
+
+export const AboutDescriptionTitle = styled.h1`
+font-size: 16px;
+`
+
+export const AboutDescriptionText = styled.p`
+`
+
+export const SignUpMain = styled.main`
+display: flex;
+flex-direction: column;
+align-items: center;
+margin: 42px 0;
+`
+
+export const SignUpForm = styled.form`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+background: rgb(0, 0, 37);
+border-radius: 26px;
+width: 751px;
+padding: 26px 68px;
+gap: 4px 0;
+`
+
+export const SignUpInput = styled.input`
+width: 287px;
+border: 0px;
+margin: 0 0 6px 0;
+`
+
+export const SignUpSubmitButton = styled.button`
+margin: 16px 0 0 0;
+padding: 4px 6px;
+border: 0px;
+width: 177px;
 `

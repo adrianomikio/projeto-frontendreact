@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { AstroRocksContext } from "../contexts/AstroRocksContext";
 import {
     Header,
@@ -12,10 +12,10 @@ import {
     ButtonsBox, LoginButton, SignupButton,
     Navbar, NavButton,
     AboutDescriptionSection, AboutDescriptionTitle, AboutDescriptionText,
-    Footer, Socials, SocialMediaIcon, FooterButton, FooterText, AboutMain
+    Footer, Socials, SocialMediaIcon, FooterButton, FooterText, AboutMain, SignUpMain, SignUpForm, SignUpInput, SignUpSubmitButton
 } from "../components/styled-components";
 
-export const AboutPage = () => {
+export const SignUpPage = () => {
     const context = useContext(AstroRocksContext)
     const navigate = useNavigate()
     let {
@@ -33,6 +33,26 @@ export const AboutPage = () => {
         LinkedInIcon, FacebookIcon, InstagramIcon, GitHubIcon
     } = context
 
+    const [userNameSignUp, setUserNameSignUp] = useState("")
+    const [userEmailSignUp, setUserEmailSignUp] = useState("")
+    const [userPasswordSignUp, setUserPasswordSignUp] = useState("")
+
+    const onChangeNameSignUp = (e) => {
+        setUserNameSignUp(e.target.value)
+    }
+    const onChangeEmailSignUp = (e) => {
+        setUserEmailSignUp(e.target.value)
+    }
+    const onChangePasswordSignUp = (e) => {
+        setUserPasswordSignUp(e.target.value)
+    }
+
+    const signUserUp = (e) => {
+        e.preventDefault()
+        const userToSignUp = {name: userNameSignUp, email: userEmailSignUp, password: userPasswordSignUp}
+        console.log(userToSignUp)
+    }
+
     return (
         <>
             <Header>
@@ -47,7 +67,6 @@ export const AboutPage = () => {
                         <AmountInCart>{productsAmountInUsersCart}</AmountInCart>
                         <WelcomeMessage>{welcomeMessage}</WelcomeMessage>
                     </ThumbnailMessageBox>
-
                     <LoginForm name="login">
                         <EmailInput
                             type="text"
@@ -84,23 +103,17 @@ export const AboutPage = () => {
                 <NavButton onClick={() => goToHomePage(navigate)}>Home</NavButton>
                 <NavButton onClick={() => goToAboutPage(navigate)}>Sobre</NavButton>
             </Navbar>
-            <AboutMain>
-                <AboutDescriptionSection>
-                    <AboutDescriptionTitle>
-                        Sobre o AstroRocks:
-                    </AboutDescriptionTitle>
-                    <AboutDescriptionText>
-                        O AstroRocks é um projeto que se iniciou no bootcamp Web Full Stack na Labenu, durante o módulo front-end com foco na biblioteca React.<br />
-                        Trata-se de um e-commerce fantasia, onde aerólitos e meteoritos são vendidos pelo AstroDev.<br />
-                        Por ser um projeto que, eu, desenvolvedor, considerei relevante e divertido, decidi continuar trabalhando nele para torná-lo um projeto full stack.<br />
-                        O projeto ainda não está concluído, mas espero que, ainda assim, possa lhe propor uma boa experiência. <br />
-                        Você pode encontrar mais sobre mim, o desenvolvedor, no  <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">LinkedIn</a>  e no  <a href="https://github.com/adrianouge/" target="_blank">GitHub</a>. Os links também constam no canto direito do roda-pé. <br />
-
-                        <br />
-                        Até mais!
-                    </AboutDescriptionText>
-                </AboutDescriptionSection>
-            </AboutMain>
+            <SignUpMain>
+                <SignUpForm>
+                    Nome:<SignUpInput type="text" placeholder="Seu nome"
+                        value={userNameSignUp} onChange={onChangeNameSignUp} />
+                    Email: <SignUpInput type="text" placeholder="e-mail@dominio.com"
+                        value={userEmailSignUp} onChange={onChangeEmailSignUp} />
+                    Password: <SignUpInput type="password" placeholder="Sua senha"
+                        value={userPasswordSignUp} onChange={onChangePasswordSignUp} />
+                    <SignUpSubmitButton type="submit" onClick={signUserUp}>Cadastrar</SignUpSubmitButton>
+                </SignUpForm>
+            </SignUpMain>
             <Footer>
                 <FooterButton onClick={() => goToAboutPage(navigate)}>Sobre</FooterButton>
                 <FooterButton onClick={() => goToAttributionsPage(navigate)}>Atribuições</FooterButton>

@@ -15,7 +15,7 @@ import {
     Footer, Socials, SocialMediaIcon, FooterButton, FooterText, AboutMain
 } from "../components/styled-components";
 
-export const AboutPage = () => {
+export const AttributionsPage = () => {
     const context = useContext(AstroRocksContext)
     const navigate = useNavigate()
     let {
@@ -87,17 +87,13 @@ export const AboutPage = () => {
             <AboutMain>
                 <AboutDescriptionSection>
                     <AboutDescriptionTitle>
-                        Sobre o AstroRocks:
+                        Atribuições aos designers:
                     </AboutDescriptionTitle>
                     <AboutDescriptionText>
-                        O AstroRocks é um projeto que se iniciou no bootcamp Web Full Stack na Labenu, durante o módulo front-end com foco na biblioteca React.<br />
-                        Trata-se de um e-commerce fantasia, onde aerólitos e meteoritos são vendidos pelo AstroDev.<br />
-                        Por ser um projeto que, eu, desenvolvedor, considerei relevante e divertido, decidi continuar trabalhando nele para torná-lo um projeto full stack.<br />
-                        O projeto ainda não está concluído, mas espero que, ainda assim, possa lhe propor uma boa experiência. <br />
-                        Você pode encontrar mais sobre mim, o desenvolvedor, no  <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">LinkedIn</a>  e no  <a href="https://github.com/adrianouge/" target="_blank">GitHub</a>. Os links também constam no canto direito do roda-pé. <br />
-
+                        Esse projeto foi desenvolvido com ícones criados por designers que os disponibilizaram de graça, desde que fossem atribuídos a eles. Portanto, obrigado a:<br />
                         <br />
-                        Até mais!
+                        <a href="https://www.flaticon.com/authors/maxim-basinski-premium" title="Maxim Basinski Premium" target="_blank"> Maxim Basinski Premium </a> de <a href="https://www.flaticon.com/" target="_blank" title="Flaticon">FlatIcon</a> pelo ícone do carrinho,<br />
+                        LinkedIn e GitHub pelos ícones de suas respectivas marcas.
                     </AboutDescriptionText>
                 </AboutDescriptionSection>
             </AboutMain>

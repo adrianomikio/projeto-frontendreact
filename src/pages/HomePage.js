@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
     Header,
     Logo,
+    SearchSection, SearchBar, SearchButton,
     UserSection,
     ThumbnailMessageBox, WelcomeMessage,
     CartThumbnail, AmountInCart,
@@ -11,14 +12,13 @@ import {
     Navbar, NavButton,
     MainNavigation,
     ProductsSectionBuy,
-    Footer, Socials, SocialMediaIcon, FooterButton, FooterText, SearchSection, SearchBar, SearchButton
+    Footer, Socials, SocialMediaIcon, FooterButton, FooterText
 } from "../components/styled-components";
 import {
     ProductsFilter,
     ProductCardBuy
 } from "../components/homepage-only/ProductsCardBuy";
 import { AstroRocksContext } from "../contexts/AstroRocksContext";
-
 import axios from "axios";
 
 export const HomePage = () => {
@@ -34,6 +34,7 @@ export const HomePage = () => {
         products,
         productsInUsersCart, setProductsInUsersCart,
         productsAmountInUsersCart, setProductsAmountInUsersCart,
+        calculateProductsAmountInCart,
         welcomeMessage, setWelcomeMessage,
         goToHomePage, goToSignupPage, goToCartPage, goToAboutPage, goToAttributionsPage,
         LinkedInIcon, FacebookIcon, InstagramIcon, GitHubIcon
@@ -69,19 +70,6 @@ export const HomePage = () => {
 
     //     putProductInUserCart
     // }
-    
-    function calculateProductsAmountInCart(productsInUsersCart)  {
-        let howMuchProductsInCart = 0
-        if(productsInUsersCart.length > 0) {
-        for(let i in productsInUsersCart) {
-            const amountToAdd = productsInUsersCart[i].amountInCart
-            console.log(amountToAdd)
-            howMuchProductsInCart = howMuchProductsInCart + amountToAdd
-        }
-        }
-        console.log(howMuchProductsInCart)
-        setProductsAmountInUsersCart(howMuchProductsInCart)
-    }
 
     const addProductToCart = (e) => {
         const [productToBeAdded] = products.filter(
@@ -107,7 +95,7 @@ export const HomePage = () => {
                 }
             }
             if (isProductInCart === false) {
-                newProductsInUsersCart.push(...productsInUsersCart, { ...productToBeAdded, amountInCart: 1, totalPrice: productToBeAdded.price * 1})
+                newProductsInUsersCart.push(...productsInUsersCart, { ...productToBeAdded, amountInCart: 1, totalPrice: productToBeAdded.price * 1 })
             }
         }
         else {
@@ -157,12 +145,11 @@ export const HomePage = () => {
         />)
     })
 
-
-    useEffect(() => {calculateProductsAmountInCart(productsInUsersCart)}, [productsInUsersCart])
+    useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
     return (
         <>
             <Header>
-                <Logo src={AstroRocksLogo} alt="logo" />
+                <Logo src={AstroRocksLogo} alt="logo" onClick={() => goToHomePage(navigate)} />
                 <SearchSection>
                     <SearchBar type="text" placeholder="Produto a ser pesquisado" />
                     <SearchButton>Pesquisar</SearchButton>
@@ -226,12 +213,6 @@ export const HomePage = () => {
                     <FooterText>Encontre-me em:</FooterText>
                     <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">
                         <SocialMediaIcon src={LinkedInIcon} alt="Ícone LinkedIn" />
-                    </a>
-                    <a href="https://www.facebook.com/profile.php?id=100013635730492" target="_blank">
-                        <SocialMediaIcon src={FacebookIcon} alt="Ícone Facebook" />
-                    </a>
-                    <a href="https://www.instagram.com/adrianomikio/" target="_blank">
-                        <SocialMediaIcon src={InstagramIcon} alt="Ícone Instagram" />
                     </a>
                     <a href="https://github.com/adrianouge/" target="_blank">
                         <SocialMediaIcon src={GitHubIcon} alt="Ícone GitHub" />

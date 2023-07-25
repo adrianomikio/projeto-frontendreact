@@ -35,26 +35,27 @@ function App() {
   const [userPassword, setUserPassword] = useState("")
   const [userToken, setUserToken] = useState("")
   const [productsAmountInUsersCart, setProductsAmountInUsersCart] = useState(0)
-  
+
   const onChangeUserEmail = (e) => {
     setUserEmail(e.target.value)
-}
-const onChangeUserPassword = (e) => {
+  }
+  const onChangeUserPassword = (e) => {
     setUserPassword(e.target.value)
-}
-const loginUser = async (e) => {
+  }
+  const loginUser = async (e) => {
     const body = { userEmail, userPassword }
 
     try {
-        const response = await axios.get('', body)
-        console.log(response)
-        setWelcomeMessage(`Bem vindo, ${response.data}`)
+      const response = await axios.get('', body)
+      console.log(response)
+      setWelcomeMessage(`Bem vindo, ${response.data}`)
     }
 
     catch (error) {
-        console.log(error.response)
+      console.log(error.response)
     }
-}
+  }
+
   // const getProducts = async() => {
 
   //   try {
@@ -119,6 +120,19 @@ const loginUser = async (e) => {
   //   putProductInUserCart
   // }
 
+  function calculateProductsAmountInCart(productsInUsersCart) {
+    let howMuchProductsInCart = 0
+    if (productsInUsersCart.length > 0) {
+      for (let i in productsInUsersCart) {
+        const amountToAdd = productsInUsersCart[i].amountInCart
+        console.log(amountToAdd)
+        howMuchProductsInCart = howMuchProductsInCart + amountToAdd
+      }
+    }
+    console.log(howMuchProductsInCart)
+    setProductsAmountInUsersCart(howMuchProductsInCart)
+  }
+
   const context = {
     AstroRocksLogo: AstroRocksLogo,
     UserIcon: UserIcon,
@@ -130,7 +144,8 @@ const loginUser = async (e) => {
     setProductsInUsersCart: setProductsInUsersCart,
     productsAmountInUsersCart: productsAmountInUsersCart,
     setProductsAmountInUsersCart: setProductsAmountInUsersCart,
-
+    calculateProductsAmountInCart: calculateProductsAmountInCart,
+    
     userEmail: userEmail,
     setUserEmail: setUserEmail,
     onChangeUserEmail: onChangeUserEmail,
