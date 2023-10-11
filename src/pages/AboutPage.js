@@ -94,8 +94,8 @@ export const AboutPage = () => {
                         Trata-se de um e-commerce fantasia, onde aerólitos e meteoritos são vendidos pelo AstroDev.<br />
                         Por ser um projeto que, eu, desenvolvedor, considerei relevante e divertido, decidi continuar trabalhando nele para torná-lo um projeto full stack.<br />
                         O projeto ainda não está concluído, mas espero que, ainda assim, possa lhe propor uma boa experiência. <br />
-                        Você pode encontrar mais sobre mim, o desenvolvedor, no  <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">LinkedIn</a>  e no  <a href="https://github.com/adrianouge/" target="_blank">GitHub</a>. Os links também constam no canto direito do roda-pé. <br />
-
+                        Você pode encontrar mais sobre mim no  <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">LinkedIn</a>  e no  <a href="https://github.com/adrianouge/" target="_blank">GitHub</a>. Os links também constam no canto direito do roda-pé.
+                        <br />
                         <br />
                         Até mais!
                     </AboutDescriptionText>

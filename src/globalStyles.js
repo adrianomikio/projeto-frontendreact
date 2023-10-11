@@ -4,7 +4,6 @@ import Background from "./image/backgroundsite.png"
 export const GlobalStyle = createGlobalStyle`
 body {
     margin: 0px;
-    background-image: url(${Background});
     width: 1356px;
     font-family: Helvetica;
     font-size: 16px;

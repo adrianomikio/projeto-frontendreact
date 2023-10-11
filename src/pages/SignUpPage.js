@@ -11,9 +11,9 @@ import {
     LoginForm, EmailInput, PasswordInput,
     ButtonsBox, LoginButton, SignupButton,
     Navbar, NavButton,
-    AboutDescriptionSection, AboutDescriptionTitle, AboutDescriptionText,
-    Footer, Socials, SocialMediaIcon, FooterButton, FooterText, AboutMain, SignUpMain, SignUpForm, SignUpInput, SignUpSubmitButton
+    Footer, Socials, SocialMediaIcon, FooterButton, FooterText, SignUpMain, SignUpForm, SignUpInput, SignUpSubmitButton
 } from "../components/styled-components";
+import axios from "axios";
 
 export const SignUpPage = () => {
     const context = useContext(AstroRocksContext)
@@ -36,6 +36,7 @@ export const SignUpPage = () => {
     const [userNameSignUp, setUserNameSignUp] = useState("")
     const [userEmailSignUp, setUserEmailSignUp] = useState("")
     const [userPasswordSignUp, setUserPasswordSignUp] = useState("")
+    const [repeatUserPassword, setRepeatUserPassword] = useState("")
 
     const onChangeNameSignUp = (e) => {
         setUserNameSignUp(e.target.value)
@@ -46,13 +47,37 @@ export const SignUpPage = () => {
     const onChangePasswordSignUp = (e) => {
         setUserPasswordSignUp(e.target.value)
     }
-
-    const signUserUp = (e) => {
-        e.preventDefault()
-        const userToSignUp = {name: userNameSignUp, email: userEmailSignUp, password: userPasswordSignUp}
-        console.log(userToSignUp)
+    const onChangeRepeatPasswordSignUp = (e) => {
+        setRepeatUserPassword(e.target.value)
     }
-
+    function checkIfSignUpPasswordMatch(
+        userPasswordSignUp, repeatUserPassword
+    ) {
+        const passwordsChecksOut = userPasswordSignUp === repeatUserPassword
+        return passwordsChecksOut
+    }
+    const signUserUp = async (e) => {
+        e.preventDefault()
+        const body = {
+            name: userNameSignUp,
+            email: userEmailSignUp,
+            password: userPasswordSignUp
+        }
+        try {
+            if (checkIfSignUpPasswordMatch(userPasswordSignUp, repeatUserPassword)) {
+                const response = await axios.post(
+                    'https://astrorocks-back-end.onrender.com/users/signup',
+                    body
+                )
+                console.log(response)
+                setUserToken(response.data.userToken)
+            }
+            else { console.log("Senhas inseridas não são idênticas.") }
+        }
+        catch (error) {
+            console.log(error.response)
+        }
+    }
     return (
         <>
             <Header>
@@ -100,30 +125,88 @@ export const SignUpPage = () => {
                 </UserSection>
             </Header>
             <Navbar>
-                <NavButton onClick={() => goToHomePage(navigate)}>Home</NavButton>
-                <NavButton onClick={() => goToAboutPage(navigate)}>Sobre</NavButton>
+                <NavButton
+                    onClick={
+                        () => goToHomePage(navigate)
+                    }
+                >
+                    Home
+                </NavButton>
+                <NavButton
+                    onClick={
+                        () => goToAboutPage(navigate)
+                    }
+                >
+                    Sobre
+                </NavButton>
             </Navbar>
             <SignUpMain>
                 <SignUpForm>
-                    Nome:<SignUpInput type="text" placeholder="Seu nome"
-                        value={userNameSignUp} onChange={onChangeNameSignUp} />
-                    Email: <SignUpInput type="text" placeholder="e-mail@dominio.com"
-                        value={userEmailSignUp} onChange={onChangeEmailSignUp} />
-                    Password: <SignUpInput type="password" placeholder="Sua senha"
-                        value={userPasswordSignUp} onChange={onChangePasswordSignUp} />
-                    <SignUpSubmitButton type="submit" onClick={signUserUp}>Cadastrar</SignUpSubmitButton>
+                    Nome:<SignUpInput
+                        type="text"
+                        placeholder="Seu nome"
+                        value={userNameSignUp}
+                        onChange={onChangeNameSignUp}
+                    />
+                    Email: <SignUpInput
+                        type="text"
+                        placeholder="e-mail@dominio.com"
+                        value={userEmailSignUp}
+                        onChange={onChangeEmailSignUp}
+                    />
+                    Senha: <SignUpInput
+                        type="password"
+                        placeholder="Sua senha"
+                        value={userPasswordSignUp}
+                        onChange={onChangePasswordSignUp}
+                    />
+                    Repita sua senha: <SignUpInput
+                        type="password"
+                        placeholder="Repita sua senha"
+                        value={repeatUserPassword}
+                        onChange={onChangeRepeatPasswordSignUp}
+                    />
+                    <SignUpSubmitButton
+                        type="submit"
+                        onClick={signUserUp}>
+                        Cadastrar
+                    </SignUpSubmitButton>
                 </SignUpForm>
             </SignUpMain>
             <Footer>
-                <FooterButton onClick={() => goToAboutPage(navigate)}>Sobre</FooterButton>
-                <FooterButton onClick={() => goToAttributionsPage(navigate)}>Atribuições</FooterButton>
+                <FooterButton
+                    onClick={
+                        () => goToAboutPage(navigate)
+                    }>
+                    Sobre
+                </FooterButton>
+                <FooterButton
+                    onClick={
+                        () => goToAttributionsPage(navigate)
+                    }>
+                    Atribuições
+                </FooterButton>
                 <Socials>
-                    <FooterText>Encontre-me em:</FooterText>
-                    <a href="https://www.linkedin.com/in/adriano-uge-668a43149/" target="_blank">
-                        <SocialMediaIcon src={LinkedInIcon} alt="Ícone LinkedIn" />
+                    <FooterText>
+                        Encontre-me em:
+                    </FooterText>
+                    <a
+                        href="https://www.linkedin.com/in/adriano-uge-668a43149/"
+                        target="_blank"
+                    >
+                        <SocialMediaIcon
+                            src={LinkedInIcon}
+                            alt="Ícone LinkedIn"
+                        />
                     </a>
-                    <a href="https://github.com/adrianouge/" target="_blank">
-                        <SocialMediaIcon src={GitHubIcon} alt="Ícone GitHub" />
+                    <a
+                        href="https://github.com/adrianouge/"
+                        target="_blank"
+                    >
+                        <SocialMediaIcon
+                            src={GitHubIcon}
+                            alt="Ícone GitHub"
+                        />
                     </a>
                 </Socials>
             </Footer>

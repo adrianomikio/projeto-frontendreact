@@ -111,6 +111,14 @@ export const CartPage = () => {
         setCartTotalPrice(newCartTotalPrice)
     }
 
+    function registerNewOrder(e) {
+        if(productsInUsersCart.length === 0) {
+            
+        }
+
+        const newOrder = productsInUsersCart
+    }
+
     useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
     useEffect(() => { calculateCartTotalPrice(productsInUsersCart) }, [productsInUsersCart])
 
@@ -165,7 +173,7 @@ export const CartPage = () => {
                     <TotalCartPrice>
                         Total no carrinho: R${cartTotalPrice}
                     </TotalCartPrice>
-                    <PurchaseButton>
+                    <PurchaseButton onClick={registerNewOrder}>
                         Finalizar compra
                     </PurchaseButton>
                 </TotalPriceAndBuyButtonSection>

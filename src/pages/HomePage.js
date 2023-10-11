@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+    Body,
     Header,
     Logo,
     SearchSection, SearchBar, SearchButton,
@@ -9,6 +10,7 @@ import {
     CartThumbnail, AmountInCart,
     LoginForm, EmailInput, PasswordInput,
     ButtonsBox, LoginButton, SignupButton,
+    LogoutButton, UserAreaButton,
     Navbar, NavButton,
     MainNavigation,
     ProductsSectionBuy,
@@ -24,87 +26,79 @@ import axios from "axios";
 export const HomePage = () => {
     const navigate = useNavigate()
     const context = useContext(AstroRocksContext)
-
     let {
         userToken, setUserToken,
         AstroRocksLogo, UserIcon, CartIcon,
         userEmail, setUserEmail, userPassword, setUserPassword,
         onChangeUserEmail, onChangeUserPassword,
         loginUser,
+        logUserOut,
         products,
         productsInUsersCart, setProductsInUsersCart,
         productsAmountInUsersCart, setProductsAmountInUsersCart,
         calculateProductsAmountInCart,
         welcomeMessage, setWelcomeMessage,
-        goToHomePage, goToSignupPage, goToCartPage, goToAboutPage, goToAttributionsPage,
+        goToHomePage,
+        goToSignupPage, goToUserArea, goToCartPage,
+        goToAboutPage, goToAttributionsPage,
         LinkedInIcon, FacebookIcon, InstagramIcon, GitHubIcon
     } = context
-
     const [filterValue, setFilterValue] = useState("")
-    // let addProductToCart = async (e) => {
-    //     let productId = e.target.id
-    //     let productToBeAdded = {}
-
-    //     const getProductById = async () => {
-    //         try {
-    //             const response = axios.get('', productId)
-    //             console.log(response.data)
-    //             productToBeAdded = response
-    //         }
-    //         catch (error) {
-    //             console.log(error.response)
-    //         }
-    //     }
-
-    //     getProductById
-
-    //     const putProductInUserCart = async () => {
-    //         try {
-    //             const response = await axios.get('', productToBeAdded)
-    //             console.log(response)
-    //         }
-    //         catch (error) {
-    //             console.log(error.response)
-    //         }
-    //     }
-
-    //     putProductInUserCart
-    // }
-
-    const addProductToCart = (e) => {
-        const [productToBeAdded] = products.filter(
-            (product) => {
-                return product.id === Number(e.target.id)
-            })
-        let newProductsInUsersCart = []
-        let isProductInCart = false
-
-        if (productsInUsersCart.length > 0) {
-            for (let i in productsInUsersCart) {
-                if (productsInUsersCart[i].id === Number(e.target.id)) {
-                    console.log(typeof productsInUsersCart[i].id, typeof e.target.id)
-                    const newAmountInCart = productsInUsersCart[i].amountInCart += 1
-                    const newTotalPrice = (productsInUsersCart[i].price * newAmountInCart)
-                    isProductInCart = true
-                    newProductsInUsersCart = productsInUsersCart
-                    newProductsInUsersCart.splice(
-                        Number(i),
-                        1,
-                        { ...productToBeAdded, amountInCart: newAmountInCart, totalPrice: newTotalPrice })
-                    console.log(newProductsInUsersCart, newTotalPrice, typeof newTotalPrice)
-                }
+    async function addToCart(e) {
+        try {
+            const productToBeAddedId = e.target.id
+            const amountOfProduct = 1
+            const body = {
+                productId: productToBeAddedId,
+                productAmount: amountOfProduct
             }
-            if (isProductInCart === false) {
-                newProductsInUsersCart.push(...productsInUsersCart, { ...productToBeAdded, amountInCart: 1, totalPrice: productToBeAdded.price * 1 })
-            }
+            const response = await axios.post('https://astrorocks-back-end.onrender.com/carts/',
+                {
+                    headers: {
+                        Authorization: userToken
+                    },
+                    body
+                })
+            console.log(response)
         }
-        else {
-            newProductsInUsersCart.push({ ...productToBeAdded, amountInCart: 1, totalPrice: productToBeAdded.price * 1 })
+        catch (error) {
+            console.log(error.response)
         }
-        console.log(newProductsInUsersCart)
-        setProductsInUsersCart(newProductsInUsersCart)
-        calculateProductsAmountInCart(productsInUsersCart)
     }
+    // const addProductToCart = (e) => {
+    //     const [productToBeAdded] = products.filter(
+    //         (product) => {
+    //             return product.id === Number(e.target.id)
+    //         })
+    //     let newProductsInUsersCart = []
+    //     let isProductInCart = false
+
+    //     if (productsInUsersCart.length > 0) {
+    //         for (let i in productsInUsersCart) {
+    //             if (productsInUsersCart[i].id === Number(e.target.id)) {
+    //                 console.log(typeof productsInUsersCart[i].id, typeof e.target.id)
+    //                 const newAmountInCart = productsInUsersCart[i].amountInCart += 1
+    //                 const newTotalPrice = (productsInUsersCart[i].price * newAmountInCart)
+    //                 isProductInCart = true
+    //                 newProductsInUsersCart = productsInUsersCart
+    //                 newProductsInUsersCart.splice(
+    //                     Number(i),
+    //                     1,
+    //                     { ...productToBeAdded, amountInCart: newAmountInCart, totalPrice: newTotalPrice })
+    //                 console.log(newProductsInUsersCart, newTotalPrice, typeof newTotalPrice)
+    //             }
+    //         }
+    //         if (isProductInCart === false) {
+    //             newProductsInUsersCart.push(...productsInUsersCart, { ...productToBeAdded, amountInCart: 1, totalPrice: productToBeAdded.price * 1 })
+    //         }
+    //     }
+    //     else {
+    //         newProductsInUsersCart.push({ ...productToBeAdded, amountInCart: 1, totalPrice: productToBeAdded.price * 1 })
+    //     }
+    //     console.log(newProductsInUsersCart)
+    //     setProductsInUsersCart(newProductsInUsersCart)
+    //     calculateProductsAmountInCart(productsInUsersCart)
+    // }
 
     // const renderizeProducts = products.map((product) => {
     //     // if(product === undefined) {
@@ -131,67 +125,86 @@ export const HomePage = () => {
     //         addProductToCart={addProductToCart}
     //     />)
     // })
-
-    const renderizeProducts = products.map((product) => {
-        const indexOfProduct = products.indexOf(product)
-        return (<ProductCardBuy
-            key={indexOfProduct}
-            id={product.id}
-            imageUrl={product.imageUrl}
-            name={product.name}
-            description={product.description}
-            price={product.price}
-            addProductToCart={addProductToCart}
-        />)
-    })
-
-    useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
-    return (
-        <>
-            <Header>
-                <Logo src={AstroRocksLogo} alt="logo" onClick={() => goToHomePage(navigate)} />
-                <SearchSection>
-                    <SearchBar type="text" placeholder="Produto a ser pesquisado" />
-                    <SearchButton>Pesquisar</SearchButton>
-                </SearchSection>
+    function renderizeProducts(products) {
+        products.map((product) => {
+            const indexOfProduct = products.indexOf(product)
+            return (<ProductCardBuy
+                key={indexOfProduct}
+                id={product.id}
+                imageUrl={product.imageUrl}
+                name={product.name}
+                description={product.description}
+                price={product.price}
+                addProductToCart={addToCart}
+            />)
+        })
+    }
+    function renderizeUserSection(userToken) {
+        if (userToken) {
+            return (
                 <UserSection>
                     <ThumbnailMessageBox>
                         <CartThumbnail src={CartIcon} onClick={() => goToCartPage(navigate)} />
                         <AmountInCart>{productsAmountInUsersCart}</AmountInCart>
                         <WelcomeMessage>{welcomeMessage}</WelcomeMessage>
                     </ThumbnailMessageBox>
-
+                    <ButtonsBox>
+                        <UserAreaButton onClick={() => { goToUserArea(navigate) }}>Área do usuário</UserAreaButton>
+                        <LogoutButton onClick={() => logUserOut()}>Sair</LogoutButton>
+                    </ButtonsBox>
+                </UserSection>
+            )
+        }
+        else {
+            return (
+                <UserSection>
+                    <ThumbnailMessageBox>
+                        <CartThumbnail src={CartIcon} onClick={() => goToCartPage(navigate)} />
+                        <AmountInCart>{productsAmountInUsersCart}</AmountInCart>
+                        <WelcomeMessage>{welcomeMessage}</WelcomeMessage>
+                    </ThumbnailMessageBox>
                     <LoginForm name="login">
                         <EmailInput
                             type="text"
                             name="login-email"
                             placeholder="E-mail do usuário"
                             value={userEmail}
-                            onChange={onChangeUserEmail}
-                        />
+                            onChange={onChangeUserEmail} />
                         <PasswordInput
                             type="password"
                             name="login-senha"
                             placeholder="Senha"
                             value={userPassword}
-                            onChange={onChangeUserPassword}
-                        />
+                            onChange={onChangeUserPassword} />
                         <ButtonsBox>
                             <LoginButton
                                 type="submit"
-                                onClick={loginUser}
-                            >
+                                onClick={loginUser}>
                                 Login
                             </LoginButton>
                             <SignupButton
                                 name="signup"
-                                onClick={() => goToSignupPage(navigate)}
-                            >
+                                onClick={() => goToSignupPage(navigate)}>
                                 Cadastre-se
                             </SignupButton>
                         </ButtonsBox>
                     </LoginForm>
                 </UserSection>
+            )
+        }
+    }
+    useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
+    useEffect(() => { renderizeUserSection(userToken) }, [userToken])
+    useEffect(() => { renderizeProducts(products) }, [products])
+    return (
+        <Body>
+            <Header>
+                <Logo src={AstroRocksLogo} alt="logo" onClick={() => goToHomePage(navigate)} />
+                <SearchSection>
+                    <SearchBar type="text" placeholder="Produto a ser pesquisado" />
+                    <SearchButton>Pesquisar</SearchButton>
+                </SearchSection>
+                {renderizeUserSection(userToken)}
             </Header>
             <Navbar>
                 <NavButton onClick={() => goToHomePage(navigate)}>Home</NavButton>
@@ -204,7 +217,7 @@ export const HomePage = () => {
                 </select> */}
             </MainNavigation>
             <ProductsSectionBuy>
-                {renderizeProducts}
+                {renderizeProducts(products)}
             </ProductsSectionBuy>
             <Footer>
                 <FooterButton onClick={() => goToAboutPage(navigate)}>Sobre</FooterButton>
@@ -219,6 +232,6 @@ export const HomePage = () => {
                     </a>
                 </Socials>
             </Footer>
-        </>
+        </Body>
     )
 }
