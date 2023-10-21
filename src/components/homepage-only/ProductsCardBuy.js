@@ -16,7 +16,7 @@ export const ProductCardBuy = (props) => {
                 <p>R${price}</p>
                 <ProductBuyButton
                     id={id}
-                    onClick={addProductToCart}>Adicionar</ProductBuyButton>
+                    onClick={(e) => addProductToCart(e)}>Adicionar</ProductBuyButton>
             </ProductInformation>
         </ProductInfoSection>
     )

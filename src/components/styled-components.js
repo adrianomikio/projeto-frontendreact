@@ -210,13 +210,14 @@ display: flex;
 flex-direction: row;
 flex-wrap: wrap;
 width: 1356px;
-height: 474px;
+height: 551px;
 `
 export const ProductInfoSection = styled.div`
+width: 287px;
+height: 474px;
 display: flex;
 flex-direction: column;
 margin-left: 68px;
-width: 287px;
 padding: 1rem;
 border-radius: 16px;
 align-items: center;

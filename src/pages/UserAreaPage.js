@@ -71,13 +71,16 @@ export const UserAreaPage = () => {
         return passwordsChecksOut
     }
     const changeUserEmail = async (e) => {
-        const body = { userToken, newEmail }
+        const body = { newEmail }
         e.preventDefault()
         try {
             if (checkIfNewEmailMatch(newEmail, confirmNewEmail)) {
                 const response = await axios.post(
                     'https://astrorocks-back-end.onrender.com/users/changeemail',
-                    body
+                    body,
+                    {
+                        headers: { Authorization: userToken }
+                    }
                 )
                 console.log(response)
             }
@@ -94,31 +97,14 @@ export const UserAreaPage = () => {
             if (checkIfNewPasswordMatch(newPassword, confirmNewPassword)) {
                 const response = await axios.post(
                     'https://astrorocks-back-end.onrender.com/users/changepassword',
-                    body
+                    body,
+                    {
+                        headers: { Authorization: userToken }
+                    }
                 )
                 console.log(response)
             }
             else { console.log("Por favor, confirme sua nova senha.") }
-        }
-        catch (error) {
-            console.log(error.response)
-        }
-    }
-    const registerNewProduct = async (e) => {
-        e.preventDefault()
-        const body = {
-            userToken,
-            name: productName,
-            description: productDescription,
-            price: productPrice,
-            amountInStock: productAmountInStock
-        }
-        try {
-            const response = await axios.post(
-                'https://astrorocks-back-end.onrender.com/products/registernewproduct',
-                body
-            )
-            console.log(response)
         }
         catch (error) {
             console.log(error.response)
@@ -138,6 +124,28 @@ export const UserAreaPage = () => {
         goToHomePage, goToSignupPage, goToCartPage, goToAboutPage, goToAttributionsPage, goToUserArea,
         LinkedInIcon, GitHubIcon
     } = context
+    const registerNewProduct = async (e) => {
+        e.preventDefault()
+        const body = {
+            name: productName,
+            imgUrl: productImgUrl,
+            description: productDescription,
+            price: productPrice,
+            amountInStock: productAmountInStock
+        }
+        try {
+            const response = await axios.post(
+                'https://astrorocks-back-end.onrender.com/products/registernewproduct',
+                body, {
+                headers: { Authorization: userToken }
+            }
+            )
+            console.log(response)
+        }
+        catch (error) {
+            console.log(error.response)
+        }
+    }
     function renderizeUserSection(userToken) {
         if (userToken) {
             return (
@@ -222,7 +230,7 @@ export const UserAreaPage = () => {
                             value={confirmNewEmail}
                             onChange={onChangeConfirmNewEmail}
                             placeholder="Confirme seu novo e-mail" />
-                        <UserCommandButton type="submit" onClick={changeUserEmail}>
+                        <UserCommandButton type="submit" onClick={(e) => changeUserEmail(e)}>
                             Mudar e-mail
                         </UserCommandButton>
                         <UserCommandButton onClick={() => setUserUserWants("nothing")}>
@@ -246,7 +254,7 @@ export const UserAreaPage = () => {
                             value={confirmNewPassword}
                             onChange={onChangeConfirmNewPassword}
                             placeholder="Confirme sua nova senha" />
-                        <UserCommandButton type="submit" onClick={changeUserPassword}>
+                        <UserCommandButton type="submit" onClick={(e) => changeUserPassword(e)}>
                             Mudar senha
                         </UserCommandButton>
                         <UserCommandButton onClick={() => setUserUserWants("nothing")}>

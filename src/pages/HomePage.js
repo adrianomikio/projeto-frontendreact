@@ -33,10 +33,9 @@ export const HomePage = () => {
         onChangeUserEmail, onChangeUserPassword,
         loginUser,
         logUserOut,
-        products,
-        productsInUsersCart, setProductsInUsersCart,
-        productsAmountInUsersCart, setProductsAmountInUsersCart,
-        calculateProductsAmountInCart,
+        products, setProducts,
+        usersCart, setUsersCart,
+        getUsersCart,
         welcomeMessage, setWelcomeMessage,
         goToHomePage,
         goToSignupPage, goToUserArea, goToCartPage,
@@ -44,22 +43,102 @@ export const HomePage = () => {
         LinkedInIcon, FacebookIcon, InstagramIcon, GitHubIcon
     } = context
     const [filterValue, setFilterValue] = useState("")
+
     async function addToCart(e) {
         try {
-            const productToBeAddedId = e.target.id
-            const amountOfProduct = 1
-            const body = {
-                productId: productToBeAddedId,
-                productAmount: amountOfProduct
+            if (userToken) {
+                if (usersCart.length > 0) {
+                    for (let i in usersCart) {
+                        if (usersCart[i].product_id === e.target.id) {
+                            const productAmount = Number(usersCart[i].product_amount)
+                            const newAmount = productAmount + 1
+                            const stringfiedNewAmount = newAmount.toString()
+                            const productId = e.target.id.toString()
+                            const body = {
+                                productId: productId,
+                                newProductAmount: stringfiedNewAmount
+                            }
+                            console.log(body)
+                            const response = await axios.post(
+                                'https://astrorocks-back-end.onrender.com/carts/updatecart/',
+                                body,
+                                {
+                                    headers: {
+                                        Authorization: userToken
+                                    }
+                                }
+                            )
+                            console.log(response)
+                            getUsersCart(userToken)
+                        }
+                        else {
+                            const productToBeAddedId = e.target.id
+                            const amountOfProduct = '1'
+                            const body = {
+                                productId: productToBeAddedId,
+                                productAmount: amountOfProduct
+                            }
+                            const response = await axios.post(
+                                'https://astrorocks-back-end.onrender.com/carts/',
+                                body,
+                                {
+                                    headers: {
+                                        Authorization: userToken
+                                    }
+                                }
+                            )
+                            console.log(response)
+                        }
+                    }
+                }
+                else {
+                    const productToBeAddedId = e.target.id
+                    const amountOfProduct = '1'
+                    const body = {
+                        productId: productToBeAddedId,
+                        productAmount: amountOfProduct
+                    }
+                    const response = await axios.post('https://astrorocks-back-end.onrender.com/carts/',
+                        body,
+                        {
+                            headers: {
+                                Authorization: userToken
+                            }
+                        })
+                    console.log(response)
+                    getUsersCart(userToken)
+                }
             }
-            const response = await axios.post('https://astrorocks-back-end.onrender.com/carts/',
-                {
-                    headers: {
-                        Authorization: userToken
-                    },
-                    body
-                })
-            console.log(response)
+            else {
+                const existingCartLocalStorage = localStorage.getItem('productsInCart')
+                if (existingCartLocalStorage === null) {
+                    const productToBeAddedId = e.target.id
+                    const amountOfProduct = '1'
+                    const productsInCart = [{
+                        productId: productToBeAddedId,
+                        productAmount: amountOfProduct
+                    }]
+                    const cartLocalStorage = JSON.stringify(productsInCart)
+                    localStorage.setItem('productsInCart', cartLocalStorage)
+                }
+                else {
+                    let existingCart = JSON.parse(existingCartLocalStorage)
+                    for (let i in existingCart) {
+                        if (existingCart[i].productId === e.target.id) {
+                            const productExistingAmount = Number(existingCart[i].productAmount)
+                            const newProductAmount = productExistingAmount + 1
+                            const stringfiedNewProductAmount = newProductAmount.toString()
+                            existingCart[i].productAmount = stringfiedNewProductAmount
+                        }
+                        else {
+                            const newProductInCart = { productId: e.target.id, productAmount: '1' }
+                            existingCart.push(newProductInCart)
+                        }
+                    }
+                    let newProductsInUsersCartStringfied = JSON.stringify(existingCart)
+                    localStorage.setItem('productsInCart', newProductsInUsersCartStringfied)
+                }
+            }
         }
         catch (error) {
             console.log(error.response)
@@ -126,18 +205,19 @@ export const HomePage = () => {
     //     />)
     // })
     function renderizeProducts(products) {
-        products.map((product) => {
+        const renderedProducts = products.map((product) => {
             const indexOfProduct = products.indexOf(product)
             return (<ProductCardBuy
                 key={indexOfProduct}
                 id={product.id}
-                imageUrl={product.imageUrl}
+                imageUrl={product.img_url}
                 name={product.name}
                 description={product.description}
                 price={product.price}
                 addProductToCart={addToCart}
             />)
         })
+        return renderedProducts
     }
     function renderizeUserSection(userToken) {
         if (userToken) {
@@ -145,7 +225,7 @@ export const HomePage = () => {
                 <UserSection>
                     <ThumbnailMessageBox>
                         <CartThumbnail src={CartIcon} onClick={() => goToCartPage(navigate)} />
-                        <AmountInCart>{productsAmountInUsersCart}</AmountInCart>
+                        <AmountInCart>0</AmountInCart>
                         <WelcomeMessage>{welcomeMessage}</WelcomeMessage>
                     </ThumbnailMessageBox>
                     <ButtonsBox>
@@ -160,7 +240,7 @@ export const HomePage = () => {
                 <UserSection>
                     <ThumbnailMessageBox>
                         <CartThumbnail src={CartIcon} onClick={() => goToCartPage(navigate)} />
-                        <AmountInCart>{productsAmountInUsersCart}</AmountInCart>
+                        <AmountInCart>0</AmountInCart>
                         <WelcomeMessage>{welcomeMessage}</WelcomeMessage>
                     </ThumbnailMessageBox>
                     <LoginForm name="login">
@@ -193,7 +273,20 @@ export const HomePage = () => {
             )
         }
     }
-    useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
+    async function getProducts() {
+        try {
+            const response = await axios.get(
+                'https://astrorocks-back-end.onrender.com/products/'
+            )
+            setProducts(response.data.allProducts)
+        }
+        catch (error) {
+            console.log(error.response)
+        }
+    }
+    useEffect(() => { getProducts() }, [])
+    // useEffect(() => { calculateProductsAmountInCart(productsInUsersCart) }, [productsInUsersCart])
+    useEffect(() => { getUsersCart(userToken) }, [userToken])
     useEffect(() => { renderizeUserSection(userToken) }, [userToken])
     useEffect(() => { renderizeProducts(products) }, [products])
     return (

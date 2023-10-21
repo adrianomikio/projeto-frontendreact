@@ -29,12 +29,34 @@ function App() {
   const [userPassword, setUserPassword] = useState("")
   const [userToken, setUserToken] = useState("")
   const [productsAmountInUsersCart, setProductsAmountInUsersCart] = useState(0)
+  const [usersCart, setUsersCart] = useState([])
   const onChangeUserEmail = (e) => {
     setUserEmail(e.target.value)
     console.log(typeof userEmail)
   }
   const onChangeUserPassword = (e) => {
     setUserPassword(e.target.value)
+  }
+  async function getUsersCart(userToken) {
+    try {
+      if (userToken) {
+        const response = await axios.get(
+          'https://astrorocks-back-end.onrender.com/carts/',
+          {
+            headers: { Authorization: userToken }
+          })
+        console.log(response)
+        if (response.data.userCart) {
+          const newUsersCart = []
+          newUsersCart.push(response.data.userCart)
+          setUsersCart(newUsersCart)
+          console.log(usersCart)
+        }
+      }
+    }
+    catch (error) {
+      console.log(error.response)
+    }
   }
   const loginUser = async (e) => {
     e.preventDefault()
@@ -51,6 +73,7 @@ function App() {
       if (response.data.userToken) {
         setUserToken(response.data.userToken)
         setWelcomeMessage(`${response.data.message}`)
+        console.log(typeof usersCart)
       }
     }
     catch (error) {
@@ -61,38 +84,15 @@ function App() {
     setUserToken()
     setWelcomeMessage("Bem vindo, visitante.")
   }
-  async function getProducts() {
-    try {
-      const response = await axios.get('https://astrorocks-back-end.onrender.com/products/',
-        {})
-      setProducts(response.data.allProducts)
-    }
-    catch (error) {
-      console.log(error.response)
-    }
-  }
-  function calculateProductsAmountInCart(productsInUsersCart) {
-    let howMuchProductsInCart = 0
-    if (productsInUsersCart.length > 0) {
-      for (let i in productsInUsersCart) {
-        const amountToAdd = productsInUsersCart[i].amountInCart
-        console.log(amountToAdd)
-        howMuchProductsInCart = howMuchProductsInCart + amountToAdd
-      }
-    }
-    console.log(howMuchProductsInCart)
-    setProductsAmountInUsersCart(howMuchProductsInCart)
-  }
   const context = {
     AstroRocksLogo: AstroRocksLogo,
     UserIcon: UserIcon,
     CartIcon: CartIcon,
     products: products,
-    productsInUsersCart: productsInUsersCart,
-    setProductsInUsersCart: setProductsInUsersCart,
-    productsAmountInUsersCart: productsAmountInUsersCart,
-    setProductsAmountInUsersCart: setProductsAmountInUsersCart,
-    calculateProductsAmountInCart: calculateProductsAmountInCart,
+    setProducts: setProducts,
+    usersCart: usersCart,
+    setUsersCart: setUsersCart,
+    getUsersCart: getUsersCart,
     userEmail: userEmail,
     setUserEmail: setUserEmail,
     onChangeUserEmail: onChangeUserEmail,
@@ -116,7 +116,6 @@ function App() {
     FacebookIcon: FacebookIcon,
     InstagramIcon: InstagramIcon
   }
-  useEffect(() => { getProducts() }, [])
   return (
     <>
       <GlobalStyle />
